@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advanced Learning – StockMaster</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --secondary-color: #1e40af;
+      --accent-color: #3b82f6;
+      --text-dark: #1f2937;
+      --text-medium: #4b5563;
+      --text-light: #6b7280;
+      --bg-light: #f9fafb;
+      --bg-white: #ffffff;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.6;
+      color: var(--text-medium);
+      background-color: var(--bg-light);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Header Styles */
+    .portal-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .portal-header h1 {
+      font-size: 2.5rem;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .portal-header h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      border-radius: 2px;
+    }
+
+    .portal-header p {
+      font-size: 1.1rem;
+      color: var(--text-medium);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Navigation Tabs */
+    .category-tabs {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      background-color: var(--bg-white);
+      border: none;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      color: var(--text-medium);
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--box-shadow);
+    }
+
+    .tab-btn.active,
+    .tab-btn:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    /* Learning Sections */
+    .learning-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+
+    .learning-card {
+      background-color: var(--bg-white);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+    }
+
+    .learning-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-header {
+      padding: 1.5rem;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+    }
+
+    .card-header h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-header .difficulty {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .card-body p {
+      margin-bottom: 1rem;
+      color: var(--text-medium);
+    }
+
+    .card-footer {
+      padding: 0 1.5rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .duration {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      padding: 0.5rem 1rem;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .action-btn:hover {
+      background-color: var(--secondary-color);
+    }
+
+    /* Interactive Elements */
+    .interactive-element {
+      margin: 1.5rem 0;
+      padding: 1.5rem;
+      background-color: var(--bg-white);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+
+    .quiz-container {
+      margin-top: 1rem;
+    }
+
+    .quiz-question {
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .quiz-option {
+      padding: 0.75rem;
+      background-color: var(--bg-light);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .quiz-option:hover {
+      background-color: #e5e7eb;
+    }
+
+    .quiz-option.correct {
+      background-color: #d1fae5;
+      border-left: 4px solid var(--success-color);
+    }
+
+    .quiz-option.incorrect {
+      background-color: #fee2e2;
+      border-left: 4px solid var(--danger-color);
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      border-bottom: 1px dotted var(--text-light);
+      cursor: help;
+    }
+
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 200px;
+      background-color: var(--text-dark);
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 0.5rem;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.875rem;
+    }
+
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .learning-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .portal-header h1 {
+        font-size: 2rem;
+      }
+    }
+
+    /* Progress Tracker */
+    .progress-tracker {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background-color: var(--bg-white);
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      z-index: 100;
+    }
+
+    .progress-tracker h4 {
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background-color: #e5e7eb;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    /* Back to Top Button */
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 50px;
+      height: 50px;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: var(--box-shadow);
+      z-index: 99;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-to-top:hover {
+      background-color: var(--secondary-color);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="portal-header">
+      <h1><i class="fas fa-chart-line"></i> StockMaster Learning Portal</h1>
+      <p>Master the stock market with our comprehensive educational resources. From beginner basics to advanced trading strategies, we've got you covered.</p>
+    </header>
+
+    <div class="category-tabs">
+      <button class="tab-btn active" data-category="all">All Topics</button>
+      <button class="tab-btn" data-category="basics">Market Basics</button>
+      <button class="tab-btn" data-category="analysis">Analysis Methods</button>
+      <button class="tab-btn" data-category="trading">Trading Strategies</button>
+      <button class="tab-btn" data-category="risk">Risk Management</button>
+      <button class="tab-btn" data-category="advanced">Advanced Concepts</button>
+    </div>
+
+    <div class="learning-content">
+      <!-- Market Basics Section -->
+      <div class="learning-card" data-category="basics">
+        <div class="card-header">
+          <h3>Stock Market Fundamentals</h3>
+          <span class="difficulty">Beginner</span>
+        </div>
+        <div class="card-body">
+          <p>Learn the essential concepts of how stock markets operate, including exchanges, order types, market participants, and how prices are determined.</p>
+          
+          <div class="interactive-element">
+            <h4>Key Concepts:</h4>
+            <ul>
+              <li>Primary vs Secondary Markets</li>
+              <li>Market Orders vs Limit Orders</li>
+              <li>Bulls vs Bears</li>
+              <li>Market Indices (S&P 500, NASDAQ, etc.)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="duration"><i class="far fa-clock"></i> 25 min</span>
+          <button class="action-btn">Start Learning</button>
+        </div>
+      </div>
+
+      <!-- Fundamental Analysis -->
+      <div class="learning-card" data-category="analysis">
+        <div class="card-header">
+          <h3>Fundamental Analysis Deep Dive</h3>
+          <span class="difficulty">Intermediate</span>
+        </div>
+        <div class="card-body">
+          <p>Master the art of evaluating companies through financial statements, ratios, and qualitative factors to identify undervalued stocks.</p>
+          
+          <div class="interactive-element">
+            <h4>What You'll Learn:</h4>
+            <ul>
+              <li>Reading financial statements (10-K, 10-Q)</li>
+              <li>Key ratios: P/E, P/B, ROE, Debt/Equity</li>
+              <li>Discounted Cash Flow (DCF) valuation</li>
+              <li>Qualitative factors: moat, management</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="duration"><i class="far fa-clock"></i> 45 min</span>
+          <button class="action-btn">Start Learning</button>
+        </div>
+      </div>
+
+      <!-- Technical Analysis -->
+      <div class="learning-card" data-category="analysis">
+        <div class="card-header">
+          <h3>Technical Analysis Masterclass</h3>
+          <span class="difficulty">Intermediate</span>
+        </div>
+        <div class="card-body">
+          <p>Learn to read price charts, identify patterns, and use technical indicators to time your entries and exits in the market.</p>
+          
+          <div class="interactive-element">
+            <h4>Topics Covered:</h4>
+            <ul>
+              <li>Candlestick patterns and chart types</li>
+              <li>Support & Resistance levels</li>
+              <li>Moving averages and MACD</li>
+              <li>Relative Strength Index (RSI)</li>
+              <li>Volume analysis</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="duration"><i class="far fa-clock"></i> 60 min</span>
+          <button class="action-btn">Start Learning</button>
+        </div>
+      </div>
+
+      <!-- Options Trading -->
+      <div class="learning-card" data-category="advanced">
+        <div class="card-header">
+          <h3>Options Trading Strategies</h3>
+          <span class="difficulty">Advanced</span>
+        </div>
+        <div class="card-body">
+          <p>Understand how options work and learn proven strategies for income generation and hedging your portfolio.</p>
+          
+          <div class="interactive-element">
+            <div class="quiz-container">
+              <div class="quiz-question">What's the maximum loss when buying a call option?</div>
+              <div class="quiz-options">
+                <div class="quiz-option correct">Premium paid</div>
+                <div class="quiz-option">Unlimited</div>
+                <div class="quiz-option">Stock price minus premium</div>
+                <div class="quiz-option">Strike price plus premium</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="duration"><i class="far fa-clock"></i> 90 min</span>
+          <button class="action-btn">Start Learning</button>
+        </div>
+      </div>
+
+      <!-- Risk Management -->
+      <div class="learning-card" data-category="risk">
+        <div class="card-header">
+          <h3>Portfolio Risk Management</h3>
+          <span class="difficulty">Intermediate</span>
+        </div>
+        <div class="card-body">
+          <p>Learn how to protect your capital through proper position sizing, diversification, and risk/reward analysis.</p>
+          
+          <div class="interactive-element">
+            <h4>Key Principles:</h4>
+            <ul>
+              <li>The 1-2% risk rule</li>
+              <li>Portfolio correlation</li>
+              <li>Stop-loss strategies</li>
+              <li>Hedging techniques</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="duration"><i class="far fa-clock"></i> 30 min</span>
+          <button class="action-btn">Start Learning</button>
+        </div>
+      </div>
+
+      <!-- Trading Psychology -->
+      <div class="learning-card" data-category="trading">
+        <div class="card-header">
+          <h3>Trading Psychology & Discipline</h3>
+          <span class="difficulty">All Levels</span>
+        </div>
+        <div class="card-body">
+          <p>Master the mental game of trading to avoid common emotional pitfalls and stick to your trading plan.</p>
+          
+          <div class="interactive-element">
+            <h4>What You'll Learn:</h4>
+            <ul>
+              <li>Overcoming fear and greed</li>
+              <li>Developing a trader's mindset</li>
+              <li>Journaling and performance review</li>
+              <li>Building discipline and patience</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="duration"><i class="far fa-clock"></i> 40 min</span>
+          <button class="action-btn">Start Learning</button>
+        </div>
+      </div>
+
+      <!-- Swing Trading -->
+      <div class="learning-card" data-category="trading">
+        <div class="card-header">
+          <h3>Swing Trading Strategies</h3>
+          <span class="difficulty">Intermediate</span>
+        </div>
+        <div class="card-body">
+          <p>Learn how to capture gains in a stock (or any financial instrument) over a period of a few days to several weeks.</p>
+          
+          <div class="interactive-element">
+            <h4>Strategy Components:</h4>
+            <ul>
+              <li>Finding momentum stocks</li>
+              <li>Entry and exit criteria</li>
+              <li>Technical setups for swing trades</li>
+              <li>Position management</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="duration"><i class="far fa-clock"></i> 50 min</span>
+          <button class="action-btn">Start Learning</button>
+        </div>
+      </div>
+
+      <!-- Value Investing -->
+      <div class="learning-card" data-category="analysis">
+        <div class="card-header">
+          <h3>Value Investing Principles</h3>
+          <span class="difficulty">Intermediate</span>
+        </div>
+        <div class="card-body">
+          <p>Discover the time-tested approach of finding undervalued stocks with strong fundamentals and long-term potential.</p>
+          
+          <div class="interactive-element">
+            <h4>Core Concepts:</h4>
+            <ul>
+              <li>Margin of safety</li>
+              <li>Intrinsic value calculation</li>
+              <li>Contrarian investing</li>
+              <li>Economic moats</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="duration"><i class="far fa-clock"></i> 55 min</span>
+          <button class="action-btn">Start Learning</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Tracker -->
+  <div class="progress-tracker">
+    <h4>Your Progress</h4>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <p id="progress-text">0% Complete</p>
+  </div>
+
+  <!-- Back to Top Button -->
+  <div class="back-to-top" id="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+
+  <script>
+    // Tab Filtering Functionality
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const learningCards = document.querySelectorAll('.learning-card');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class from all buttons
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        // Add active class to clicked button
+        button.classList.add('active');
+        
+        const category = button.dataset.category;
+        
+        // Filter cards
+        learningCards.forEach(card => {
+          if (category === 'all' || card.dataset.category === category) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Quiz Interaction
+    const quizOptions = document.querySelectorAll('.quiz-option');
+    quizOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        // Remove any existing classes
+        quizOptions.forEach(opt => {
+          opt.classList.remove('correct', 'incorrect');
+        });
+        
+        // Add appropriate class to clicked option
+        if (this.classList.contains('correct')) {
+          this.classList.add('correct');
+        } else {
+          this.classList.add('incorrect');
+          // Find and highlight the correct answer
+          const correctOption = this.parentElement.querySelector('.correct');
+          correctOption.classList.add('correct');
+        }
+      });
+    });
+
+    // Progress Tracker Simulation
+    function updateProgress() {
+      const progressFill = document.getElementById('progress-fill');
+      const progressText = document.getElementById('progress-text');
+      const randomProgress = Math.floor(Math.random() * 30) + 10; // Random between 10-40%
+      
+      progressFill.style.width = `${randomProgress}%`;
+      progressText.textContent = `${randomProgress}% Complete`;
+    }
+    
+    // Update progress every 5 seconds (simulation)
+    updateProgress();
+    setInterval(updateProgress, 5000);
+
+    // Back to Top Button
+    const backToTopButton = document.getElementById('back-to-top');
+    
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTopButton.classList.add('visible');
+      } else {
+        backToTopButton.classList.remove('visible');
+      }
+    });
+    
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+
+    // Tooltip Initialization
+    const tooltips = document.querySelectorAll('.tooltip');
+    tooltips.forEach(tooltip => {
+      tooltip.addEventListener('mouseenter', function() {
+        this.querySelector('.tooltiptext').style.visibility = 'visible';
+        this.querySelector('.tooltiptext').style.opacity = '1';
+      });
+      
+      tooltip.addEventListener('mouseleave', function() {
+        this.querySelector('.tooltiptext').style.visibility = 'hidden';
+        this.querySelector('.tooltiptext').style.opacity = '0';
+      });
+    });
+  </script>
+</body>
+</html>

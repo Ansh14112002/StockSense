@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stock Sentiment Result</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Sentiment Analysis for <span class="symbol">{{ symbol }}</span></h1>
+    <h2 class="verdict">Final Verdict: <span class="{{ final_sentiment|lower }}">{{ final_sentiment }}</span></h2>
+
+    <div class="table-controls">
+      <button onclick="exportToCSV()" class="export-btn">📁 Export to CSV</button>
+      <button onclick="goBack()" class="back-btn">← Back</button>
+    </div>
+
+    <table class="sentiment-table" id="sentimentTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Headline</th>
+          <th>Source</th>
+          <th>Date</th>
+          <th>Sentiment</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in results %}
+        <tr class="fade-in">
+          <td>{{ loop.index }}</td>
+          <td><a href="{{ item.url }}" target="_blank">{{ item.title }}</a></td>
+          <td>{{ item.source }}</td>
+          <td>{{ item.date }}</td>
+          <td><span class="badge {{ item.sentiment|lower }}">{{ item.sentiment }}</span></td>
+          <td>{{ item.score }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="chart-container">
+      <canvas id="sentimentChart"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const sentimentData = {
+      labels: ['Buy', 'Hold', 'Sell'],
+      datasets: [{
+        label: 'Sentiment Distribution',
+        data: [
+          {{ results | selectattr("sentiment", "equalto", "Buy") | list | length }},
+          {{ results | selectattr("sentiment", "equalto", "Hold") | list | length }},
+          {{ results | selectattr("sentiment", "equalto", "Sell") | list | length }}
+        ],
+        backgroundColor: ['#4caf50', '#ffc107', '#f44336']
+      }]
+    };
+
+    window.onload = function () {
+      new Chart(document.getElementById('sentimentChart'), {
+        type: 'bar',
+        data: sentimentData,
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    };
+  </script>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

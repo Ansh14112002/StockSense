@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StockSense - Dashboard</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="logo-container">
+        <i class="fas fa-chart-line logo-icon"></i>
+        <h1 class="logo-text">StockSense</h1>
+      </div>
+      
+      <nav class="nav-menu">
+        <ul>
+          <li class="active">
+            <a href="#">
+              <i class="fas fa-home"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('portfolio') }}">
+              <i class="fas fa-wallet"></i>
+              <span>Portfolio</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('forecast') }}">
+                <i class="fas fa-chart-pie"></i>
+              <span>Forecast</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('learn') }}">
+              <i class="fas fa-graduation-cap"></i>
+              <span>Learning Portal</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      
+      <div class="user-section">
+        <div class="user-avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="user-info">
+          <span class="user-name">Ansh Srivastava</span>
+          <span class="user-email">srivastavaansh171@gmail.com</span>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <header class="top-bar">
+        <button class="sidebar-toggle">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="search-bar">
+          <input type="text" placeholder="Search stocks, news, analysis...">
+          <button><i class="fas fa-search"></i></button>
+        </div>
+        <div class="notifications">
+          <button class="notification-btn">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge">3</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="content-container">
+        <h1 class="page-title">Market Dashboard</h1>
+
+        <!-- Live Indices Section -->
+        <section class="section fade-in">
+          <h2><i class="fas fa-chart-line"></i> Live Market Indices</h2>
+          <div id="indices-container" class="indices-container">
+            <!-- Cards will be injected here by JS -->
+          </div>
+          <div class="chart-section">
+            <h3><i class="fas fa-chart-bar"></i> Sensex Intraday (Last 1 Day)</h3>
+            <canvas id="sensexChart" width="800" height="400"></canvas>
+          </div>
+        </section>
+
+        <!-- Sentiment Analysis Section -->
+        <section class="section fade-in">
+          <h2><i class="fas fa-brain"></i> Analyze Stock Sentiment</h2>
+          <form action="{{ url_for('analyze') }}" method="POST" class="form-section">
+            <input
+              type="text"
+              name="symbol"
+              placeholder="e.g., RELIANCE.NS or AAPL"
+              required
+            />
+            <button type="submit"><i class="fas fa-search"></i> Analyze</button>
+          </form>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section class="section fade-in">
+          <h2><i class="fas fa-wallet"></i> Your Portfolio</h2>
+          <form action="{{ url_for('add_stock') }}" method="POST" class="form-section">
+            <input
+              type="text"
+              name="symbol"
+              placeholder="Stock Symbol (e.g., TCS.NS)"
+              required
+            />
+            <input
+              type="number"
+              name="quantity"
+              placeholder="Quantity"
+              step="1"
+              required
+            />
+            <input
+              type="number"
+              name="buy_price"
+              placeholder="Buy Price (₹ or $)"
+              step="0.01"
+              required
+            />
+            <button type="submit"><i class="fas fa-plus"></i> Add to Portfolio</button>
+          </form>
+          <br />
+          <div style="text-align: center;">
+            <a href="{{ url_for('portfolio') }}" class="view-link"><i class="fas fa-eye"></i> View Portfolio</a>
+          </div>
+        </section>
+
+        <!-- Forecast Section -->
+        <section class="section fade-in">
+          <h2><i class="fas fa-chart-pie"></i> Stock Trend Forecast</h2>
+          <form action="{{ url_for('forecast') }}" method="POST" class="form-section">
+            <input
+              type="text"
+              name="symbol"
+              placeholder="Enter stock symbol (e.g., INFY.NS)"
+              required
+            />
+            <button type="submit"><i class="fas fa-chart-pie"></i> Predict Trend</button>
+          </form>
+        </section>
+
+        <!-- Learning Portal Link -->
+        <section class="section fade-in">
+          <h2><i class="fas fa-graduation-cap"></i> Learning Portal</h2>
+          <p>Brush up on stock basics, investing tips, and market analysis.</p>
+          <div style="text-align: center;">
+            <a href="{{ url_for('learn') }}" class="view-link"><i class="fas fa-book-open"></i> Go to Learn</a>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast">
+    <div class="toast-content">
+      <i class="fas fa-check-circle"></i>
+      <span class="toast-message">Data updated successfully!</span>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="spinner-container">
+    <div class="spinner"></div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

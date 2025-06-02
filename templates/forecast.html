@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Stock Forecast - StockSense</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>🔮 Stock Trend (Last 30 Days)</h1>
+
+    <!-- Form to Enter Symbol -->
+    <form action="{{ url_for('forecast') }}" method="POST" class="form-section">
+      <input type="text" name="symbol" placeholder="Enter stock symbol (e.g., INFY.NS)" required />
+      <button type="submit">Show Trend</button>
+    </form>
+
+    {% if symbol %}
+      <div class="section">
+        <h2>📈 {{ symbol }} Trend:</h2>
+        <p class="forecast-result">{{ trend }}</p>
+
+        {% if chart_data %}
+          <!-- Inject chartData directly as a JS object -->
+          <script>
+            const chartData = {{ chart_data | safe }};
+          </script>
+          <canvas id="forecastChart" width="600" height="300"></canvas>
+        {% else %}
+          <p class="info-text">⚠️ Unable to load historical data for {{ symbol }}.</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <br />
+    <a href="{{ url_for('index') }}" class="view-link">← Back to Dashboard</a>
+  </div>
+
+  {% if chart_data %}
+    <script src="{{ url_for('static', filename='js/forecast.js') }}"></script>
+  {% endif %}
+</body>
+</html>
+
