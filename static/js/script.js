@@ -1,29 +1,12 @@
 // DOM Elements
 const sidebar = document.querySelector('.sidebar');
 const sidebarToggle = document.querySelector('.sidebar-toggle');
-const sidebarClose = document.querySelector('.sidebar-close');
 const toast = document.querySelector('.toast');
 const spinnerContainer = document.querySelector('.spinner-container');
 
 // Toggle sidebar on mobile
 sidebarToggle.addEventListener('click', () => {
-  sidebar.classList.add('active');
-});
-
-// Close sidebar with close button
-sidebarClose.addEventListener('click', () => {
-  sidebar.classList.remove('active');
-});
-
-// Close sidebar when clicking outside
-document.addEventListener('click', (e) => {
-  const isSidebarOpen = sidebar.classList.contains('active');
-  const isClickInsideSidebar = sidebar.contains(e.target);
-  const isClickOnToggle = sidebarToggle.contains(e.target);
-  
-  if (isSidebarOpen && !isClickInsideSidebar && !isClickOnToggle) {
-    sidebar.classList.remove('active');
-  }
+  sidebar.classList.toggle('active');
 });
 
 // Show toast notification
@@ -52,7 +35,7 @@ function simulateDataLoad() {
   showSpinner();
   setTimeout(() => {
     hideSpinner();
-    showToast('Market data updated successfully');
+    showToast('Data loaded successfully');
   }, 1500);
 }
 
@@ -70,11 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
     link.addEventListener('click', function() {
       navLinks.forEach(l => l.parentNode.classList.remove('active'));
       this.parentNode.classList.add('active');
-      
-      // Close sidebar on mobile after clicking a link
-      if (window.innerWidth <= 992) {
-        sidebar.classList.remove('active');
-      }
     });
   });
   
@@ -85,6 +63,36 @@ document.addEventListener('DOMContentLoaded', () => {
   // Simulate initial data load
   setTimeout(simulateDataLoad, 1000);
 });
+
+
+// Go back to home
+function goBack() {
+  window.location.href = "/";
+}
+
+// Export sentiment table to CSV
+function exportToCSV() {
+  const table = document.getElementById("sentimentTable");
+  let csv = [];
+  for (let row of table.rows) {
+    let rowData = [];
+    for (let cell of row.cells) {
+      rowData.push(cell.innerText.replace(/,/g, ""));
+    }
+    csv.push(rowData.join(","));
+  }
+
+  const csvContent = "data:text/csv;charset=utf-8," + csv.join("\n");
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "sentiment_results.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+let sensexChart = null;
 
 // Fetch and update index and chart data
 async function fetchLiveData() {
@@ -107,8 +115,7 @@ async function fetchLiveData() {
         <h3><i class="fas fa-chart-line"></i> ${name}</h3>
         <p class="index-value">${idx.current !== null ? idx.current : '—'}</p>
         <p class="index-change ${changeColor}">
-          <i class="fas ${idx.change_pct >= 0 ? 'fa-arrow-up' : 'fa-arrow-down'}"></i>
-          ${idx.change_pct !== null ? Math.abs(idx.change_pct).toFixed(2) + '%' : '—'}
+          ${arrow} ${idx.change_pct !== null ? idx.change_pct.toFixed(2) + '%' : '—'}
         </p>
       `;
       indicesContainer.appendChild(card);
@@ -161,11 +168,11 @@ async function fetchLiveData() {
           scales: {
             x: {
               grid: { display: false, drawBorder: false },
-              ticks: { color: '#b2bec3' },
+              ticks: { color: '#636e72' },
             },
             y: {
-              grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false },
-              ticks: { color: '#b2bec3' },
+              grid: { color: 'rgba(0,0,0,0.05)', drawBorder: false },
+              ticks: { color: '#636e72' },
             },
           },
           interaction: {
@@ -178,7 +185,6 @@ async function fetchLiveData() {
     }
   } catch (err) {
     console.error('Error fetching live data:', err);
-    showToast('Failed to load market data');
   }
 }
 
